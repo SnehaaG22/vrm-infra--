@@ -1,0 +1,33 @@
+version: "3.9"
+
+services:
+  postgres:
+    image: postgres:15
+    container_name: vrm_postgres
+    environment:
+      POSTGRES_USER: vrm
+      POSTGRES_PASSWORD: vrm
+      POSTGRES_DB: vrm_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - vrm_postgres_data:/var/lib/postgresql/data
+    networks:
+      - vrm_network
+
+  pgadmin:
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "5050:80"
+    networks:
+      - vrm_network
+
+volumes:
+  vrm_postgres_data:
+
+networks:
+  vrm_network:
+    driver: bridge
