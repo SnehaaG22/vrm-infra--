@@ -4,7 +4,7 @@ This repository contains the Infrastructure + Background Jobs + Evidence Storage
 
 ***Implemented Features:***
 
-**Implemented Features:**
+**Backend & Infrastructure:**
 
 Django Backend
 
@@ -157,6 +157,7 @@ minio
 11) All started via:
 
 docker-compose up -d
+
 
 
 
