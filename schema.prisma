@@ -1,0 +1,156 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  ADMIN
+  REVIEWER
+  REQUESTER
+  VENDOR
+}
+
+enum AssessmentStatus {
+  ASSIGNED
+  IN_PROGRESS
+  SUBMITTED
+  UNDER_REVIEW
+  REMEDIATION
+  APPROVED
+  REJECTED
+}
+
+enum RemediationStatus {
+  OPEN
+  IN_PROGRESS
+  CLOSED
+}
+
+
+model Org {
+  id        String   @id @default(uuid())
+  name      String
+  users     User[]
+  vendors   Vendor[]
+  createdAt DateTime @default(now())
+}
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  password  String
+  role      Role
+  orgId     String
+  org       Org      @relation(fields: [orgId], references: [id])
+  createdAt DateTime @default(now())
+}
+
+model Vendor {
+  id          String       @id @default(uuid())
+  name        String
+  assessments Assessment[]
+  users       VendorUser[]
+  orgId       String
+  org         Org          @relation(fields: [orgId], references: [id])
+}
+
+model VendorUser {
+  id       String  @id @default(uuid())
+  email    String  @unique
+  vendorId String
+  vendor   Vendor  @relation(fields: [vendorId], references: [id])
+  createdAt DateTime @default(now())
+}
+
+model Template {
+  id       String            @id @default(uuid())
+  name     String
+  versions TemplateVersion[]
+}
+
+model TemplateVersion {
+  id         String    @id @default(uuid())
+  version    Int
+  locked     Boolean   @default(false)
+  templateId String
+  template   Template  @relation(fields: [templateId], references: [id])
+  sections   Section[]
+}
+
+model Section {
+  id                String   @id @default(uuid())
+  name              String
+  templateVersionId String
+  templateVersion   TemplateVersion @relation(fields: [templateVersionId], references: [id])
+  questions         Question[]
+}
+
+model Question {
+  id        String   @id @default(uuid())
+  text      String
+  weight    Int
+  sectionId String
+  section   Section  @relation(fields: [sectionId], references: [id])
+}
+
+model Assessment {
+  id                String           @id @default(uuid())
+  vendorId          String
+  templateVersionId String
+  status            AssessmentStatus
+  vendor            Vendor           @relation(fields: [vendorId], references: [id])
+  templateVersion   TemplateVersion  @relation(fields: [templateVersionId], references: [id])
+  responses         Response[]
+  evidences         Evidence[]
+  remediations      Remediation[]
+  renewals          Renewal[]
+  createdAt         DateTime @default(now())
+}
+
+model Response {
+  id           String      @id @default(uuid())
+  assessmentId String
+  questionId   String
+  answer       String
+  assessment   Assessment  @relation(fields: [assessmentId], references: [id])
+}
+
+model Evidence {
+  id           String     @id @default(uuid())
+  assessmentId String
+  assessment   Assessment @relation(fields: [assessmentId], references: [id])
+  filePath     String
+  expiryDate   DateTime?
+  createdAt    DateTime @default(now())
+}
+
+model Remediation {
+  id           String     @id @default(uuid())
+  assessmentId String
+  assessment   Assessment @relation(fields: [assessmentId], references: [id])
+  status       RemediationStatus
+  notes        String?
+  createdAt    DateTime @default(now())
+}
+
+model Renewal {
+  id           String     @id @default(uuid())
+  assessmentId String
+  assessment   Assessment @relation(fields: [assessmentId], references: [id])
+  dueDate      DateTime
+  createdAt    DateTime @default(now())
+}
+
+model AuditLog {
+  id        String   @id @default(uuid())
+  orgId     String
+  actorId   String
+  action    String
+  entity    String
+  entityId  String
+  createdAt DateTime @default(now())
+}
