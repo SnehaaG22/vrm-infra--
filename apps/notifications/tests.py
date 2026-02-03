@@ -1,5 +1,5 @@
 from django.test import TestCase
-from .models import Notification
+from apps.notifications.models import Notification
 
 class NotificationTestCase(TestCase):
     def test_no_duplicate_notification(self):

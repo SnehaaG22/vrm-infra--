@@ -23,4 +23,8 @@ def run():
         file_type="jpg",
     )
 
+<<<<<<< HEAD
     print("Sample Evidence seeded successfully!")
+=======
+    print("Sample Evidence seeded successfully!")
+>>>>>>> d271ac02bcff173701a74d6a74264cec6e1e213f

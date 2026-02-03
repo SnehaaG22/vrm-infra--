@@ -19,7 +19,10 @@ INSTALLED_APPS = [
     'apps.evidence',
     'apps.notifications',
     'apps.renewals',
+<<<<<<< HEAD
     
+=======
+>>>>>>> d271ac02bcff173701a74d6a74264cec6e1e213f
 ]
 
 MIDDLEWARE = [

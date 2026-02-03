@@ -1,5 +1,5 @@
 from django.test import TestCase
-from .models import EvidenceFile
+from apps.evidence.models import EvidenceFile
 from django.utils import timezone
 import datetime
 
