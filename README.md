@@ -2,7 +2,9 @@
 
 This repository contains the Infrastructure + Background Jobs + Evidence Storage automation for the VRM MVP.
 
-***It implements:***
+***Implemented Features:***
+
+**Implemented Features:**
 
 Django Backend
 
@@ -14,25 +16,17 @@ MinIO (object storage for evidence)
 
 SQLite (local DB)
 
-Evidence expiry reminders
+**Evidence Automation:**
 
-Renewal due reminders
+Evidence expiry reminders:
 
-Notification system
+30 days before expiry
 
-***Features Implemented***
+15 days before expiry
 
-Evidence Automation
+7 days before expiry
 
-Evidence expiry reminders at:
-
-30 days
-
-15 days
-
-7 days
-
-Creates notification records automatically.
+Creates notification records automatically for expiring evidence
 
 **Renewal Automation**
 
@@ -41,6 +35,14 @@ Detects overdue renewals
 Marks status = OVERDUE
 
 Creates notifications for admin/requester
+
+**Notification System**
+
+Notification APIs (list/read/mark-read) with org scoping
+
+Duplicate prevention using Notification.objects.get_or_create()
+
+Retry safety with Celery autoretry (max_retries=3)
 
 **MinIO Evidence Storage Strategy**
 
@@ -105,12 +107,12 @@ Password: minioadmin
 
 http://localhost:8000/admin
 
-7) Testing Background Jobs
+7) Testing Background Jobs & Notifications:
    
-Manual Trigger (for testing)
-
-python manage.py shell
-
+  **Manual Trigger**
+  
+ python manage.py shell
+ 
 from apps.evidence.tasks import evidence_expiry_reminder
 
 from apps.renewals.tasks import renewal_due_reminder
@@ -119,16 +121,22 @@ evidence_expiry_reminder()
 
 renewal_due_reminder()
 
-8) View Notifications
+**Verify Notifications via API**
 
-http://127.0.0.1:8000/admin/notifications/
+#PowerShell
+
+iwr "http://localhost:8000/api/notifications/?user_id=1&org_id=1" -UseBasicParsing
+
+8) Run Minimal Tests:
+
+docker compose exec backend python manage.py test
+
 
 9) Celery Logs
 
 Worker:
 
 docker-compose logs -f worker
-
 
 Beat:
 
@@ -149,6 +157,7 @@ minio
 11) All started via:
 
 docker-compose up -d
+
 
 
 
