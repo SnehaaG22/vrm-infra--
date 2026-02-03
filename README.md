@@ -1,9 +1,9 @@
-VRM Infrastructure Backend – MVP Automation
+# VRM Infrastructure Backend – MVP Automation
 This repository contains the Infrastructure + Background Jobs + Evidence Storage automation for the VRM MVP.
 
-Implemented Features:
+***Implemented Features:***
 
-Backend & Infrastructure:
+**Backend & Infrastructure:**
 
 Django Backend
 
@@ -15,7 +15,7 @@ MinIO (object storage for evidence)
 
 SQLite (local DB)
 
-Evidence Automation:
+**Evidence Automation:**
 
 Evidence expiry reminders:
 
@@ -27,7 +27,7 @@ Evidence expiry reminders:
 
 Creates notification records automatically for expiring evidence
 
-Renewal Automation
+**Renewal Automation**
 
 Detects overdue renewals
 
@@ -35,7 +35,7 @@ Marks status = OVERDUE
 
 Creates notifications for admin/requester
 
-Notification System
+**Notification System:**
 
 Notification APIs (list/read/mark-read) with org scoping
 
@@ -43,7 +43,7 @@ Duplicate prevention using Notification.objects.get_or_create()
 
 Retry safety with Celery autoretry (max_retries=3)
 
-MinIO Evidence Storage Strategy
+**MinIO Evidence Storage Strategy:**
 
 All evidence files follow this structure:
 
@@ -53,7 +53,8 @@ Example:
 
 1/10/101/5/document.pdf
 
-Local Setup Instructions
+# Local Setup Instructions:
+
 1️) Start Docker Services
 
 From project root:
@@ -82,14 +83,16 @@ run()
 
 exit()
 
-Access Admin Panel
+4) Access Admin Panel
+   
 http://127.0.0.1:8000/admin/
 
 Create superuser if needed:
 
 python manage.py createsuperuser
 
-MinIO Dashboard
+5) MinIO Dashboard
+   
 http://localhost:9001
 
 Credentials:
@@ -98,11 +101,13 @@ Username: minioadmin
 
 Password: minioadmin
 
-Django Admin
+6) Django Admin
+   
 http://localhost:8000/admin
 
-Testing Background Jobs & Notifications:
-Manual Trigger
+**Testing Background Jobs & Notifications:**
+
+7) Manual Trigger
 
 python manage.py shell
 
@@ -114,16 +119,18 @@ evidence_expiry_reminder()
 
 renewal_due_reminder()
 
-Verify Notifications via API
+8) Verify Notifications via API
 
 #PowerShell
 
 iwr "http://localhost:8000/api/notifications/?user_id=1&org_id=1" -UseBasicParsing
 
-Run Minimal Tests:
+9) Run Minimal Tests:
+
 docker compose exec backend python manage.py test
 
-Celery Logs
+10) Celery Logs
+
 Worker:
 
 docker-compose logs -f worker
@@ -132,7 +139,8 @@ Beat:
 
 docker-compose logs -f beat
 
-Services Included
+11) Services Included:
+
 backend (Django)
 
 worker (Celery)
@@ -143,5 +151,6 @@ redis
 
 minio
 
-All started via:
+12) All started via:
+
 docker-compose up -d
