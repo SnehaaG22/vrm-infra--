@@ -2,6 +2,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from .models import EvidenceFile
+from apps.notifications.models import Notification  # import Notification model
 import datetime
 
 class EvidenceUploadView(APIView):
@@ -35,4 +36,14 @@ class EvidenceUploadView(APIView):
             expiry_date=expiry_date,
             file_type=file_type,
         )
+
+        # Create notification automatically
+        Notification.objects.create(
+            org_id=org_id,
+            user_id=uploaded_by,  # or whoever should get the notification
+            message=f"New evidence uploaded for question {question_id}",
+            related_object_id=evidence.id,  # optional, for reference
+            type="evidence_upload"
+        )
+
         return Response({"detail": "Evidence uploaded", "id": evidence.id}, status=status.HTTP_201_CREATED)

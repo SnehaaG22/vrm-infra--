@@ -26,8 +26,5 @@ class Notification(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-<<<<<<< HEAD
         return f"Notification {self.id} - {self.type}"
-=======
-        return f"Notification {self.id} - {self.type}"
->>>>>>> d271ac02bcff173701a74d6a74264cec6e1e213f
+        

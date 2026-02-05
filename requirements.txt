@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 Django>=4.2
 djangorestframework
 celery
@@ -6,12 +6,5 @@ django-celery-beat
 redis
 psycopg2-binary
 minio
-=======
-Django>=4.2
-djangorestframework
-celery
-django-celery-beat
-redis
-psycopg2-binary
-minio
->>>>>>> d271ac02bcff173701a74d6a74264cec6e1e213f
+
+

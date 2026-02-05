@@ -47,8 +47,5 @@ def renewal_due_reminder(self):
             type="RENEWAL_DUE",
             message="Renewal overdue",
             status="pending",
-<<<<<<< HEAD
         )
-=======
-        )
->>>>>>> d271ac02bcff173701a74d6a74264cec6e1e213f
+      

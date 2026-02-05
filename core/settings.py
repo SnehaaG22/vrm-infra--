@@ -5,7 +5,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = "dev-secret"
 DEBUG = True
-ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -14,15 +14,15 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    
+    'rest_framework',
 
     'apps.common',
     'apps.evidence',
     'apps.notifications',
     'apps.renewals',
-<<<<<<< HEAD
     
-=======
->>>>>>> d271ac02bcff173701a74d6a74264cec6e1e213f
+    
 ]
 
 MIDDLEWARE = [

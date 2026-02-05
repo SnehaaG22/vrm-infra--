@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 version: "3.9"
 
 services:
@@ -12,12 +11,19 @@ services:
     environment:
       DJANGO_SETTINGS_MODULE: core.settings
       CELERY_BROKER_URL: redis://redis:6379/0
-      MINIO_ENDPOINT: minio
+      MINIO_ENDPOINT: minio:9000
       MINIO_ACCESS_KEY: minioadmin
       MINIO_SECRET_KEY: minioadmin
+      POSTGRES_HOST: postgres
+      POSTGRES_DB: vrm_db
+      POSTGRES_USER: vrm
+      POSTGRES_PASSWORD: vrm
     depends_on:
       - redis
       - minio
+      - postgres
+    networks:
+      - vrm_network
 
   worker:
     build: .
@@ -27,9 +33,15 @@ services:
     environment:
       DJANGO_SETTINGS_MODULE: core.settings
       CELERY_BROKER_URL: redis://redis:6379/0
+      POSTGRES_HOST: postgres
+      POSTGRES_DB: vrm_db
+      POSTGRES_USER: vrm
+      POSTGRES_PASSWORD: vrm
     depends_on:
       - redis
       - backend
+    networks:
+      - vrm_network
 
   beat:
     build: .
@@ -39,15 +51,23 @@ services:
     environment:
       DJANGO_SETTINGS_MODULE: core.settings
       CELERY_BROKER_URL: redis://redis:6379/0
+      POSTGRES_HOST: postgres
+      POSTGRES_DB: vrm_db
+      POSTGRES_USER: vrm
+      POSTGRES_PASSWORD: vrm
     depends_on:
       - redis
       - backend
       - worker
+    networks:
+      - vrm_network
 
   redis:
     image: redis:7
     ports:
       - "6379:6379"
+    networks:
+      - vrm_network
 
   minio:
     image: minio/minio:latest
@@ -60,6 +80,8 @@ services:
       - "9000:9000"
       - "9001:9001"
     command: server /data --console-address ":9001"
+    networks:
+      - vrm_network
 
   postgres:
     image: postgres:15
@@ -92,69 +114,3 @@ volumes:
 networks:
   vrm_network:
     driver: bridge
-=======
-version: "3.9"
-
-services:
-  backend:
-    build: .
-    command: python manage.py runserver 0.0.0.0:8000
-    volumes:
-      - .:/app
-    ports:
-      - "8000:8000"
-    environment:
-      DJANGO_SETTINGS_MODULE: core.settings
-      CELERY_BROKER_URL: redis://redis:6379/0
-      MINIO_ENDPOINT: minio
-      MINIO_ACCESS_KEY: minioadmin
-      MINIO_SECRET_KEY: minioadmin
-    depends_on:
-      - redis
-      - minio
-
-  worker:
-    build: .
-    command: celery -A core worker -l info
-    volumes:
-      - .:/app
-    environment:
-      DJANGO_SETTINGS_MODULE: core.settings
-      CELERY_BROKER_URL: redis://redis:6379/0
-    depends_on:
-      - redis
-      - backend
-
-  beat:
-    build: .
-    command: celery -A core beat -l info
-    volumes:
-      - .:/app
-    environment:
-      DJANGO_SETTINGS_MODULE: core.settings
-      CELERY_BROKER_URL: redis://redis:6379/0
-    depends_on:
-      - redis
-      - backend
-      - worker
-
-  redis:
-    image: redis:7
-    ports:
-      - "6379:6379"
-
-  minio:
-    image: minio/minio:latest
-    environment:
-      MINIO_ROOT_USER: minioadmin
-      MINIO_ROOT_PASSWORD: minioadmin
-    volumes:
-      - minio_data:/data
-    ports:
-      - "9000:9000"
-      - "9001:9001"
-    command: server /data --console-address ":9001"
-
-volumes:
-  minio_data:
->>>>>>> d271ac02bcff173701a74d6a74264cec6e1e213f
